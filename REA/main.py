@@ -49,9 +49,8 @@ class RandomExchangeAtoms(object):
         """
         Initialize struct_dict with struct.
         """
-        self.struct_dict = PymatDict.init_pymatgen_dict(
-            self.struct.as_dict()
-        )
+        self.struct_dict = PymatDict.init_pymatgen_dict(self.struct.as_dict())
+        return self
     
     def run_exchange(self, number=100):
         """
