@@ -61,10 +61,8 @@ class RandomExchangeAtoms(object):
             atom1 = random.randint(0, len(self.struct_dict["sites"])-1)
             atom2 = random.randint(0, len(self.struct_dict["sites"])-1)
             self._swap_atom(atom1, atom2)
-        
         self._sort_atom()
-        
-        return self.struct_dict
+        return self
     
     def _swap_atom(self, atom1, atom2):
         """
