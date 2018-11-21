@@ -100,8 +100,9 @@ class RandomExchangeAtoms(object):
             File name (directory) of exported file (default: "./POSCAR").
         """
         struct = pymatgen.Structure.from_dict(self.struct_dict)
-        with open(filename, mode="w") as file:
-            file.writelines(str(vasp_inputs.Poscar(struct)))
+        if format is "poscar":
+            with open(filename, mode="w") as file:
+                file.writelines(str(vasp_inputs.Poscar(struct)))
     
 
 if __name__ == "__main__":
