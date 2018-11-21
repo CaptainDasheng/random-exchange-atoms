@@ -56,7 +56,35 @@ class RandomExchangeAtoms(object):
         number: int
             Number of exchange atoms (default: 100).
         """
-        pass
+        for i in range(number):
+            atom1 = random.randint(0, len(self.struct_dict["sites"])-1)
+            atom2 = random.randint(0, len(self.struct_dict["sites"])-1)
+            self._swap_atom(atom1, atom2)
+        self._sort_atom()
+    
+    def _swap_atom(self, atom1, atom2):
+        """
+        Swap two atoms in struct_dict.
+        
+        Arguments
+        ---------
+        atom1, atom2: int
+            Index of two swapping atoms in struct_dict.
+        """
+        element1 = self.struct_dict["sites"][atom1]["species"][0]["element"]
+        element2 = self.struct_dict["sites"][atom2]["species"][0]["element"]
+        self.struct_dict["sites"][atom1]["species"][0]["element"] = element2
+        self.struct_dict["sites"][atom2]["species"][0]["element"] = element1
+    
+    def _sort_atom(self):
+        """
+        Sort atoms in struct_dict with key of atomic species.
+        """
+        sites_dict = self.struct_dict["sites"]
+        sites_dict = sorted(
+            sites_dict, key=lambda x:x["species"][0]["element"]
+        )
+        self.struct_dict["sites"] = sites_dict
     
     def export_dict(self, format="poscar"):
         """
