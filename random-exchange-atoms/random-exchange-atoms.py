@@ -3,6 +3,7 @@
 import logging
 import random
 import pymatgen
+import pymatgen.io.vasp.inputs as vasp_inputs
 
 from .io.pymatgen_dict import PymatgenDict as PymatDict
 
@@ -89,7 +90,7 @@ class RandomExchangeAtoms(object):
         )
         self.struct_dict["sites"] = sites_dict
     
-    def export_dict(self, format="poscar"):
+    def export_dict(self, format="poscar", filename="./POSCAR"):
         """
         Export edited structure.
         
@@ -97,8 +98,12 @@ class RandomExchangeAtoms(object):
         ---------
         fortmat: str
             Format of export data (default: "poscar").
+        filename: str
+            File name (directory) of exported file (default: "./POSCAR").
         """
-        pass
+        struct = pymatgen.Structure.from_dict(self.struct_dict)
+        with open(filename, mode="w") as file:
+            file.writelines(str(vasp_inputs.Poscar(struct)))
     
 
 if __name__ == "__main__":
