@@ -30,4 +30,5 @@ if __name__ == "__main__":
     for i in range(3):
         REA_object.init_struct_dict()
         REA_object.run_exchange(5)
+        REA_object.modify_cell_size()
         REA_object.export_dict(filename="./sample_output/POSCAR"+str(i+1))
