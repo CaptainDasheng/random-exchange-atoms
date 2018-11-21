@@ -93,29 +93,31 @@ class RandomExchangeAtoms(object):
         )
         self.struct_dict["sites"] = sites_dict
     
-    def modify_cell_size(self, probability=10, change_min=-1, change_max=1):
+    def modify_cell_size(self, probability=10.0, 
+                         change_min=-1.0, change_max=1.0):
         """
         Modify cell size randomly.
         
         Arguments
         ---------
-        probability: int
+        probability: float
             Probability of changing cell size (%).
-        change_min: int
+        change_min: float
             Minimum of changing cell size (% for the length of axes).
-        change_max: int
+        change_max: float
             Maxmum of changing cell size (% for the length of axes).
         """
         len_axis = [] # 0: a-axis, 1: b-axis and 2: c-axis.
         for axis in self.struct_dict["lattice"]["matrix"]:
             len_axis.append(math.sqrt(axis[0]**2+axis[1]**2+axis[2]**2))
         
-        for axis in self.struct_dict["lattice"]["matrix"]:
-            for element in axis:
-                if random.randint(1, 100) < probability:
-                    element += len_axis*random.uniform(
-                        change_min/100, change_max/100
+        for i, axis in enumerate(self.struct_dict["lattice"]["matrix"]):
+            for j, element in enumerate(axis):
+                if random.uniform(1.0, 100.0) < probability:
+                    element += len_axis[i]*random.uniform(
+                        change_min/100.0, change_max/100.0
                     )
+                    self.struct_dict["lattice"]["matrix"][i][j] = element
                 else:
                     pass
         return self
