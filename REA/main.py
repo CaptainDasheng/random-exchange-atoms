@@ -2,6 +2,7 @@
 
 import logging
 import random
+import math
 import pymatgen
 import pymatgen.io.vasp.inputs as vasp_inputs
 
@@ -91,6 +92,33 @@ class RandomExchangeAtoms(object):
             sites_dict, key=lambda x:x["species"][0]["element"]
         )
         self.struct_dict["sites"] = sites_dict
+    
+    def modify_cell_size(self, probability=10, change_min=-1, change_max=1):
+        """
+        Modify cell size randomly.
+        
+        Arguments
+        ---------
+        probability: int
+            Probability of changing cell size (%).
+        change_min: int
+            Minimum of changing cell size (% for the length of axes).
+        change_max: int
+            Maxmum of changing cell size (% for the length of axes).
+        """
+        len_axis = [] # 0: a-axis, 1: b-axis and 2: c-axis.
+        for axis in self.struct_dict["lattice"]["matrix"]:
+            len_axis.append(math.sqrt(axis[0]**2+axis[1]**2+axis[2]**2))
+        
+        for axis in self.struct_dict["lattice"]["matrix"]:
+            for element in axis:
+                if random.randint(1, 100) < probability:
+                    element += len_axis*random.uniform(
+                        change_min/100, change_max/100
+                    )
+                else:
+                    pass
+        return self
     
     def export_dict(self, format="poscar", filename="./POSCAR"):
         """
