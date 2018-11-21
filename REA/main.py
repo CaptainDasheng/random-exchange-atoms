@@ -43,7 +43,12 @@ class RandomExchangeAtoms(object):
                 open(struct).read(),
                 fmt=format
             )
-        
+        self.init_struct_dict()
+    
+    def init_struct_dict(self):
+        """
+        Initialize struct_dict with struct.
+        """
         self.struct_dict = PymatDict.init_pymatgen_dict(
             self.struct.as_dict()
         )
