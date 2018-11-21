@@ -38,11 +38,11 @@ class PymatgenDict(object):
         for key in dict["lattice"].keys():
             if key is "matrix":
                 pass
-            else
+            else:
                 dict["lattice"][key] = None
         
-        for specie in dict["species"]:
-            specie["xyz"] = None
+        for site in dict["sites"]:
+            site["xyz"] = None
         
         return dict
 
