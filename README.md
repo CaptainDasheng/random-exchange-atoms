@@ -5,6 +5,8 @@
 
 In this package, you can exchange atoms in crystal structures randomly with pymatgen. 
 
+![sample_figure.png](https://github.com/murakami17/random-exchange-atoms/blob/master/sample/sample_output/figure/sample_figure.png "sample_figure.png")
+
 ## Requirement
 
 ### Python
