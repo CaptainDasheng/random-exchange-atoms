@@ -26,4 +26,4 @@ if __name__ == "__main__":
         Rea_object.init_struct_dict()
         Rea_object.run_exchange(5)
         Rea_object.modify_cell_size()
-        Rea_object.export_dict(filename="./sample_output/POSCAR"+str(i+1))
+        Rea_object.export_dict(filename="./sample_output/sample_basic/POSCAR"+str(i+1))
