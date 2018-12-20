@@ -17,6 +17,18 @@ Exchange atoms randomly with pymatgen.
 logger = logging.getLogger(__name__)
 
 
+class UndefinedFormatError(Exception):
+    """
+    Raises exception when user specified undefined format.
+    """
+    
+    def __init__(self, format):
+        self.format = format
+    
+    def __str__(self):
+        return("Undefined format '{1}' is specified.".format(self.format))
+
+
 class RandomExchangeAtoms(object):
     """
     Exchange atoms randomly with pymatgen.
@@ -29,7 +41,10 @@ class RandomExchangeAtoms(object):
         Structure data which can be exchange atom positions.
     """
     
-    def __init__(self, struct, format="structure"):
+    def __init__(self, struct, format="structure",
+                 filename="undefined", atom_num_limit=0,
+                 output_original_struct_if_modified="True",
+                 output_format="poscar", output_path="./"):
         """
         Arguments
         ---------
@@ -38,6 +53,17 @@ class RandomExchangeAtoms(object):
             poscar, cif, or any other what pymatgen can handle.
         format: str
             Format of read data.
+        filename: str
+            File name of read data.
+        atom_num_limit: int
+            The lower limit of the number of atoms in the unit cell.
+        output_original_struct_if_modified: bool
+            If this flag is True, output original structure
+            if it is modified in make_supercell_enough_large method.
+        output_format: str
+            Format of output data of modified original structure.
+        output_path: str
+            Path to the output file.
         """
         if format is "structure":
             self.struct = struct
@@ -46,7 +72,43 @@ class RandomExchangeAtoms(object):
                 open(struct).read(),
                 fmt=format
             )
+        self.filename = filename
+        
+        struct_if_modified = self.make_supercell_enough_large(atom_num_limit)
+        if output_original_struct_if_modified and struct_if_modified:
+            if output_format is "poscar":
+                with open(output_path + filename + "_modified", mode="w") as file:
+                    file.writelines(str(vasp_inputs.Poscar(self.struct)))
+            else:
+                raise UndefinedFormatError(format)
+        
         self.init_struct_dict()
+    
+    def make_supercell_enough_large(self, atom_num_limit):
+        """
+        Makes supercell enough large to be our random exchanging effectively.
+        
+        Arguments
+        ---------
+        atom_num_limit: int
+            The lower limit of the number of atoms in the unit cell.
+            If the number is lower than it, make shortest lattice vector
+            twice larger by using pymatgen.Structure.make_supercell method.
+        """
+        original_num_sites = self.struct_num_sites
+        while self.struct.num_sites < atom_num_limit:
+            lattice_len_dict = dict(zip(
+                ["a", "b", "c"], 
+                (struct.lattice.a, struct.lattice.b, struct.lattice.c)
+            ))
+            lattice_smallest_len_key = mix(lattice_len_dict, key=lattice_len_dict.get)
+            if lattice_smallest_len_key is "a":
+                self.struct.make_supercell([2, 1, 1])
+            elif lattice_smallest_len_key is "b":
+                self.struct.make_supercell([1, 2, 1])
+            else:
+                self.struct.make_supercell([1, 1, 2])
+        return original_num_sites == self.struct_num_sites
     
     def init_struct_dict(self):
         """
@@ -139,6 +201,8 @@ class RandomExchangeAtoms(object):
         if format is "poscar":
             with open(filename, mode="w") as file:
                 file.writelines(str(vasp_inputs.Poscar(struct)))
+        else:
+                raise UndefinedFormatError(format)
     
 
 if __name__ == "__main__":
