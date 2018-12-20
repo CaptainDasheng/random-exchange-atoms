@@ -95,7 +95,7 @@ class RandomExchangeAtoms(object):
             If the number is lower than it, make shortest lattice vector
             twice larger by using pymatgen.Structure.make_supercell method.
         """
-        original_num_sites = self.struct_num_sites
+        original_num_sites = self.struct.num_sites
         while self.struct.num_sites < atom_num_limit:
             lattice_len_dict = dict(zip(
                 ["a", "b", "c"], 
@@ -108,7 +108,7 @@ class RandomExchangeAtoms(object):
                 self.struct.make_supercell([1, 2, 1])
             else:
                 self.struct.make_supercell([1, 1, 2])
-        return original_num_sites == self.struct_num_sites
+        return not original_num_sites == self.struct.num_sites
     
     def init_struct_dict(self):
         """
@@ -202,7 +202,7 @@ class RandomExchangeAtoms(object):
             with open(filename, mode="w") as file:
                 file.writelines(str(vasp_inputs.Poscar(struct)))
         else:
-                raise UndefinedFormatError(format)
+            raise UndefinedFormatError(format)
     
 
 if __name__ == "__main__":
