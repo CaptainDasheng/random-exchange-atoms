@@ -8,8 +8,6 @@ import math
 import pymatgen
 import pymatgen.io.vasp.inputs as vasp_inputs
 
-from .io.pymatgen_dict import PymatgenDict as PymatDict
-
 """
 Exchange atoms randomly with pymatgen.
 """
@@ -85,7 +83,7 @@ class RandomExchangeAtoms(object):
             else:
                 raise UndefinedFormatError(format)
         
-        self.init_struct_dict()
+        self.struct_dict = self.struct.as_dict()
     
     def make_supercell_enough_large(self, atom_num_limit):
         """
@@ -112,13 +110,6 @@ class RandomExchangeAtoms(object):
             else:
                 self.struct.make_supercell([1, 1, 2])
         return not original_num_sites == self.struct.num_sites
-    
-    def init_struct_dict(self):
-        """
-        Initialize struct_dict with struct.
-        """
-        self.struct_dict = PymatDict.init_pymatgen_dict(self.struct.as_dict())
-        return self
     
     def run_exchange(self, number=100):
         """
