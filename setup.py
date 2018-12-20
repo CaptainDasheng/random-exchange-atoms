@@ -1,4 +1,6 @@
 # coding: utf-8
+# Copyright (c) 2018, Taku MURAKAMI. All rights reserved.
+# Distributed under the terms of the MIT License.
 
 from setuptools import setup
 from setuptools import find_packages
@@ -12,7 +14,7 @@ with open('LICENSE') as f:
 
 setup(
     name='random-exchange-atoms',
-    version='0.1.0',
+    version='1.1.0',
     description='Exchange atoms rondomly with pymatgen',
     long_description=readme,
     author='Taku MURAKAMI',
