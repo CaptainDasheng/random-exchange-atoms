@@ -77,7 +77,10 @@ class RandomExchangeAtoms(object):
         struct_if_modified = self.make_supercell_enough_large(atom_num_limit)
         if output_original_struct_if_modified and struct_if_modified:
             if output_format is "poscar":
-                with open(output_path + filename + "_modified", mode="w") as file:
+                with open(
+                    output_path + "POSCAR_" + filename + "_modified",
+                    mode="w"
+                ) as file:
                     file.writelines(str(vasp_inputs.Poscar(self.struct)))
             else:
                 raise UndefinedFormatError(format)
@@ -99,9 +102,9 @@ class RandomExchangeAtoms(object):
         while self.struct.num_sites < atom_num_limit:
             lattice_len_dict = dict(zip(
                 ["a", "b", "c"], 
-                (struct.lattice.a, struct.lattice.b, struct.lattice.c)
+                (self.struct.lattice.a, self.struct.lattice.b, self.struct.lattice.c)
             ))
-            lattice_smallest_len_key = mix(lattice_len_dict, key=lattice_len_dict.get)
+            lattice_smallest_len_key = min(lattice_len_dict, key=lattice_len_dict.get)
             if lattice_smallest_len_key is "a":
                 self.struct.make_supercell([2, 1, 1])
             elif lattice_smallest_len_key is "b":
