@@ -31,14 +31,14 @@ if __name__ == "__main__":
         obj = Rea(
             struct,
             filename=struct_name,
-            atom_num_limit=50,
+            atom_num_limit=20,
             output_format="poscar",
             output_path="./sample_output/sample_ternary_alloy/" + struct_name + "/"
         )
-        for i in range(10):
+        for i in range(33):
             obj.run_exchange(5)
-            obj.modify_cell_size()
+            obj.modify_cell_size(probability=20.0)
             obj.export_dict(
                 filename="./sample_output/sample_ternary_alloy/" + \
-                         struct_name + "/POSCAR"+str(i+1)
+                         struct_name + "/POSCAR"+ str(i+1)
             )
