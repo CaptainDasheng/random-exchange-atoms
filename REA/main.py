@@ -151,6 +151,20 @@ class RandomExchangeAtoms(object):
         )
         self.struct_dict["sites"] = sites_dict
     
+    def _is_metal_atom(self, atom):
+        """
+        Returns True if given atom is metal
+        
+        Arguments
+        ---------
+        atom: int
+            Specie of atom in struct_dict.
+        """
+        return atom not in [
+            "H", "He", "B", "C", "N", "O", "F", "Ne", "Si", "P", "S",
+            "Cl", "Ar", "As", "Se", "Br", "Kr", "Te", "I", "Xe", "At", "Rn"
+        ]
+    
     def modify_cell_size(self, probability=10.0, 
                          change_min=-1.0, change_max=1.0):
         """
