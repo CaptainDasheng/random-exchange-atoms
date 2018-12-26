@@ -111,7 +111,7 @@ class RandomExchangeAtoms(object):
                 self.struct.make_supercell([1, 1, 2])
         return not original_num_sites == self.struct.num_sites
     
-    def run_exchange(self, number=100):
+    def run_exchange(self, number=100, limit_exchange=False):
         """
         Run random exchange of atoms in structure.
         
@@ -119,10 +119,16 @@ class RandomExchangeAtoms(object):
         ---------
         number: int
             Number of exchange atoms (default: 100).
+        restrict_exchange: bool
+            If it is True, exchanging of atoms are limited in between
+            metal-metal or non-metal-non-metal.
         """
         for i in range(number):
-            atom1 = random.randint(0, len(self.struct_dict["sites"])-1)
-            atom2 = random.randint(0, len(self.struct_dict["sites"])-1)
+            while True:
+                atom1 = random.randint(0, len(self.struct_dict["sites"])-1)
+                atom2 = random.randint(0, len(self.struct_dict["sites"])-1)
+                if not limit_exchange or self._is_metal(atom1) is self._is_metal(atom2):
+                    break
             self._swap_atom(atom1, atom2)
         self._sort_atom()
         return self
@@ -151,7 +157,7 @@ class RandomExchangeAtoms(object):
         )
         self.struct_dict["sites"] = sites_dict
     
-    def _is_metal_atom(self, atom):
+    def _is_metal(self, atom):
         """
         Returns True if given atom is metal
         
